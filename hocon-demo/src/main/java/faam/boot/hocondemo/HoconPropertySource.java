@@ -1,8 +1,6 @@
 package faam.boot.hocondemo;
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigException;
-import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.*;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.core.io.support.ResourcePropertySource;
@@ -24,10 +22,17 @@ public final class HoconPropertySource extends PropertySource<Config> {
 
     @Override
     public Object getProperty(final String path) {
+        Object ret = null;
         try {
-            return this.source.getAnyRef(path);
+            final ConfigValue sourceValue = this.source.getValue(path);
+            if (sourceValue.valueType() == ConfigValueType.OBJECT) {
+                ret = this.source.getConfig(path);
+            } else {
+                ret = sourceValue.unwrapped();
+            }
         } catch (final ConfigException ignored) {
-            return null;
+            // ignored
         }
+        return ret;
     }
 }
