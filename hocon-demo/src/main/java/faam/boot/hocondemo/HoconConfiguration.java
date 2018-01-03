@@ -11,7 +11,7 @@ import org.springframework.core.env.Environment;
  * @date 27.12.2017.
  */
 @Configuration
-@PropertySource(factory = HoconPropertySourceFactory.class, value = "${config}")
+@PropertySource(factory = HoconPropertySourceFactory.class, value = "file:${config}")
 public class HoconConfiguration {
 
     @Autowired
